@@ -26,6 +26,7 @@ export class UserController {
       const token = await getToken({
         _id: String(user._id),
         username: user.username,
+        role: user.role,
       });
       return res.json({
         message: `Welcome ${user.username}`,
@@ -39,6 +40,15 @@ export class UserController {
   me = async (req, res) => {
     const user = await UserModel.findById(req.body.user._id);
     if (!user) return res.status(401).end();
-    return res.json({ id: user._id, username: user.username }).end();
+    return res
+      .json({ id: user._id, username: user.username, role: user.role })
+      .end();
+  };
+
+  setAdmin = async (req, res) => {
+    const user = await UserModel.findByIdAndUpdate(req.params.id, {
+      role: "admin",
+    });
+    return res.json({ message: "Set to admin", user }).send();
   };
 }

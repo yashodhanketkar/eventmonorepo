@@ -3,14 +3,15 @@ import { EventType, UserType } from "../../types";
 
 const API = "http://localhost:5555/api/";
 
-type LoginResponse = {
+export type LoginResponse = {
   message: string;
   token: string;
 };
 
-type MeResponse = {
+export type MeResponse = {
   id: string;
   username: string;
+  role: "admin" | "user";
 };
 
 export type EventResponse = EventType & {

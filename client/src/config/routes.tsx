@@ -12,9 +12,10 @@ export const MainRouter = () => {
     return (
       <>
         <Routes>
-          <Route path="/list" element={<List />} />
-          <Route path="/manage" element={<Manage />} />
-          <Route path="/*" element={<>Home</>} />
+          {data.role === "admin" && (
+            <Route path="/manage" element={<Manage />} />
+          )}
+          <Route path="/*" element={<List />} />
         </Routes>
         <Outlet />
       </>

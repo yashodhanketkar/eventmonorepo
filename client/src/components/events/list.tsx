@@ -5,19 +5,30 @@ import {
   EventResponse,
   useDeleteEventMutation,
   useListEventQuery,
+  useMeQuery,
 } from "../../app/services/eventAPI";
 
 export const List = () => {
   const { data, isLoading } = useListEventQuery(null);
+  const { data: meData, isLoading: meLoading } = useMeQuery(null);
   const navigate = useNavigate();
 
+  if (meLoading || !meData) return <></>;
   if (isLoading || !data) return <></>;
+
+  const isAdmin = meData.role === "admin";
+
   return (
     <div>
       <Typography variant="h4">Events List</Typography>
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
         {data.map((data, i) => (
-          <EventCardFactory key={i} data={data} navigate={navigate} />
+          <EventCardFactory
+            key={i}
+            data={data}
+            navigate={navigate}
+            isAdmin={isAdmin}
+          />
         ))}
       </div>
     </div>
@@ -27,9 +38,14 @@ export const List = () => {
 type EventCardFactoryProps = {
   data: EventResponse;
   navigate: NavigateFunction;
+  isAdmin: boolean;
 };
 
-const EventCardFactory = ({ data, navigate }: EventCardFactoryProps) => {
+const EventCardFactory = ({
+  data,
+  navigate,
+  isAdmin,
+}: EventCardFactoryProps) => {
   const [Delete, result] = useDeleteEventMutation();
   return (
     <div className="flex flex-col justify-between w-full gap-4 p-4 rounded shadow shadow-black/20">
@@ -75,25 +91,27 @@ const EventCardFactory = ({ data, navigate }: EventCardFactoryProps) => {
           </a>
         </div>
       </div>
-      <div className="inline-flex w-1/2 gap-1">
-        <Button
-          onClick={() => navigate("/manage", { state: { data: data } })}
-          color="info"
-          variant="contained"
-          fullWidth
-        >
-          Edit
-        </Button>
-        <Button
-          onClick={() => Delete(data._id)}
-          color="error"
-          disabled={result.isLoading}
-          variant="contained"
-          fullWidth
-        >
-          Delete
-        </Button>
-      </div>
+      {isAdmin && (
+        <div className="inline-flex w-1/2 gap-1">
+          <Button
+            onClick={() => navigate("/manage", { state: { data: data } })}
+            color="info"
+            variant="contained"
+            fullWidth
+          >
+            Edit
+          </Button>
+          <Button
+            onClick={() => Delete(data._id)}
+            color="error"
+            disabled={result.isLoading}
+            variant="contained"
+            fullWidth
+          >
+            Delete
+          </Button>
+        </div>
+      )}
     </div>
   );
 };

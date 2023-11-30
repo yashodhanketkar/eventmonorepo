@@ -1,4 +1,5 @@
 import { Router } from "express";
+import { Admin } from "../../middlewares/admin.js";
 import { Auth } from "../../middlewares/auth.js";
 import { UserController } from "./controller.js";
 
@@ -10,5 +11,7 @@ router.get("/", [Auth], userController.me);
 
 router.post("/login", userController.login);
 router.post("/register", userController.register);
+
+router.patch("/setadmin/:id", [Auth, Admin], userController.setAdmin);
 
 export { router as UserRouter };
