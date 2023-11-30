@@ -25,7 +25,7 @@ export const LoginPage = () => {
 
   return (
     <form
-      className="flex flex-col gap-4 w-1/3 mx-auto mt-[25vh]"
+      className="flex flex-col gap-4 px-4 md:px-0 md:w-1/3 mx-auto mt-[25vh]"
       onSubmit={handleSubmit(onSubmit)}
     >
       <Tab />
