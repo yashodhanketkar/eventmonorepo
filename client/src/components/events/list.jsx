@@ -1,8 +1,7 @@
 import { Button, Typography } from "@mui/material";
 import ReactPlayer from "react-player";
-import { NavigateFunction, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import {
-  EventResponse,
   useDeleteEventMutation,
   useListEventQuery,
   useMeQuery,
@@ -35,17 +34,7 @@ export const List = () => {
   );
 };
 
-type EventCardFactoryProps = {
-  data: EventResponse;
-  navigate: NavigateFunction;
-  isAdmin: boolean;
-};
-
-const EventCardFactory = ({
-  data,
-  navigate,
-  isAdmin,
-}: EventCardFactoryProps) => {
+const EventCardFactory = ({ data, navigate, isAdmin }) => {
   const [Delete, result] = useDeleteEventMutation();
   return (
     <div className="flex flex-col justify-between w-full gap-4 p-4 rounded shadow shadow-black/20">

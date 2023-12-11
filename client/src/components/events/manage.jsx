@@ -12,7 +12,7 @@ import {
   Typography,
 } from "@mui/material";
 import { useState } from "react";
-import { SubmitHandler, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import {
   useEditEventMutation,
@@ -20,9 +20,6 @@ import {
   usePostFileMutation,
   useStoreFileMutation,
 } from "../../app/services/eventAPI";
-import { EventType } from "../../types";
-
-type NewEvent = Omit<EventType, "_id">;
 
 export const Manage = () => {
   const location = useLocation();
@@ -34,7 +31,7 @@ export const Manage = () => {
     setValue,
     getValues,
     formState: { errors },
-  } = useForm<NewEvent>({
+  } = useForm({
     defaultValues: location.state?.data,
   });
 
@@ -45,7 +42,7 @@ export const Manage = () => {
   const [update, updateStatus] = useEditEventMutation();
   const [showSnack, toggleSnack] = useState(false);
 
-  const handleUpload = async (file: File | undefined, name: keyof NewEvent) => {
+  const handleUpload = async (file, name) => {
     if (!file) throw new Error("File not present");
     const ext = file.name.split(".")[1];
     if (name === "attendeesFile" && ext !== "xlsx") return;
@@ -81,7 +78,7 @@ export const Manage = () => {
     }
   };
 
-  const onSubmit: SubmitHandler<NewEvent> = async (data) => {
+  const onSubmit = async (data) => {
     if (_id) await update({ ...data, _id });
     else await create(data);
     toggleSnack(true);
@@ -134,7 +131,7 @@ export const Manage = () => {
         <TextField
           type="file"
           name="eventFile"
-          onChange={async (e: React.ChangeEvent<HTMLInputElement>) =>
+          onChange={async (e) =>
             await handleUpload(e.target?.files?.[0], "eventFile")
           }
           error={!!errors.eventFile}
@@ -146,7 +143,7 @@ export const Manage = () => {
         <TextField
           type="file"
           name="attendeesFile"
-          onChange={async (e: React.ChangeEvent<HTMLInputElement>) =>
+          onChange={async (e) =>
             await handleUpload(e.target?.files?.[0], "attendeesFile")
           }
           error={!!errors.attendeesFile}

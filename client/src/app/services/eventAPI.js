@@ -1,25 +1,6 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { EventType, UserType } from "../../types";
 
 const API = "http://localhost:5555/api/";
-
-export type LoginResponse = {
-  message: string;
-  token: string;
-};
-
-export type MeResponse = {
-  id: string;
-  username: string;
-  role: "admin" | "user";
-};
-
-export type EventResponse = EventType & {
-  attendeesList: {
-    name: string;
-    mobile: number;
-  }[];
-};
 
 export const eventApi = createApi({
   reducerPath: "eventApi",
@@ -33,41 +14,41 @@ export const eventApi = createApi({
   }),
   tagTypes: ["Events"],
   endpoints: (builder) => ({
-    register: builder.mutation<LoginResponse, Omit<UserType, "_id">>({
+    register: builder.mutation({
       query: (user) => ({
         url: "users/register",
         method: "POST",
         body: user,
       }),
     }),
-    login: builder.mutation<LoginResponse, Omit<UserType, "_id">>({
+    login: builder.mutation({
       query: (user) => ({
         url: "users/login",
         method: "POST",
         body: user,
       }),
     }),
-    me: builder.query<MeResponse, null>({
+    me: builder.query({
       query: () => ({
         url: "users/",
         method: "GET",
       }),
     }),
-    listEvent: builder.query<EventResponse[], null>({
+    listEvent: builder.query({
       query: () => ({
         url: "events",
         method: "GET",
       }),
       providesTags: ["Events"],
     }),
-    getEvent: builder.query<EventResponse, string>({
+    getEvent: builder.query({
       query: (id) => ({
         url: `events/${id}`,
         method: "GET",
       }),
       providesTags: ["Events"],
     }),
-    postEvent: builder.mutation<EventType[], Partial<EventType>>({
+    postEvent: builder.mutation({
       query: (body) => ({
         url: "events",
         method: "POST",
@@ -75,7 +56,7 @@ export const eventApi = createApi({
       }),
       invalidatesTags: ["Events"],
     }),
-    editEvent: builder.mutation<null, Partial<EventType>>({
+    editEvent: builder.mutation({
       query: (data) => ({
         url: `events/${data._id}`,
         method: "PATCH",
@@ -83,14 +64,14 @@ export const eventApi = createApi({
       }),
       invalidatesTags: ["Events"],
     }),
-    deleteEvent: builder.mutation<null, string>({
+    deleteEvent: builder.mutation({
       query: (id) => ({
         url: `events/${id}`,
         method: "DELETE",
       }),
       invalidatesTags: ["Events"],
     }),
-    postFile: builder.mutation<{ url: string }, FormData>({
+    postFile: builder.mutation({
       query: (body) => ({
         url: "file/upload",
         method: "POST",
@@ -98,7 +79,7 @@ export const eventApi = createApi({
         body: body,
       }),
     }),
-    storeFile: builder.mutation<{ url: string }, FormData>({
+    storeFile: builder.mutation({
       query: (body) => ({
         url: "file/store",
         method: "POST",

@@ -1,7 +1,6 @@
 import { Button, TextField } from "@mui/material";
-import { SubmitHandler, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { useLoginMutation } from "../../app/services/eventAPI";
-import { UserType } from "../../types";
 import { Tab } from "./tab";
 
 export const LoginPage = () => {
@@ -10,10 +9,10 @@ export const LoginPage = () => {
     handleSubmit,
     reset,
     formState: { errors },
-  } = useForm<Omit<UserType, "_id">>();
+  } = useForm();
   const [login, result] = useLoginMutation();
 
-  const onSubmit: SubmitHandler<Omit<UserType, "_id">> = async (data) => {
+  const onSubmit = async (data) => {
     login(data);
     reset();
   };

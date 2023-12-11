@@ -1,12 +1,7 @@
 import { Button, TextField } from "@mui/material";
-import { SubmitHandler, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { useRegisterMutation } from "../../app/services/eventAPI";
-import { UserType } from "../../types";
 import { Tab } from "./tab";
-
-type RegisterUserType = Omit<UserType, "_id"> & {
-  cnfPassword: string;
-};
 
 export const RegisterPage = () => {
   const {
@@ -15,10 +10,10 @@ export const RegisterPage = () => {
     reset,
     setError,
     formState: { errors },
-  } = useForm<RegisterUserType>();
+  } = useForm();
   const [registerUser, result] = useRegisterMutation();
 
-  const onSubmit: SubmitHandler<RegisterUserType> = async (data) => {
+  const onSubmit = async (data) => {
     if (data.password !== data.cnfPassword) {
       setError("cnfPassword", {
         message: "Password do not match",
